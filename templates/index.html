@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABD Borsası Hisse Takip Uygulaması</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .header {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .page-button-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            border-left: 4px solid #0d6efd;
+        }
+        .page-button-container:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-left-color: #0b5ed7;
+        }
+        .page-button {
+            width: 60px;
+            height: 60px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            border: none;
+            background-color: #0d6efd;
+            color: white;
+            transition: all 0.3s;
+        }
+        .page-button:hover {
+            background-color: #0b5ed7;
+            transform: scale(1.05);
+        }
+        .button-info {
+            flex-grow: 1;
+            margin-left: 15px;
+        }
+        .button-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #343a40;
+            margin-bottom: 5px;
+        }
+        .button-description {
+            font-size: 14px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        .buttons-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            margin-top: 30px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        .instructions {
+            background-color: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .instructions h4 {
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+        .instructions ul {
+            margin-bottom: 0;
+        }
+        .special-category {
+            border-left-color: #28a745;
+        }
+        .special-category .page-button {
+            background-color: #28a745;
+        }
+        .special-category .page-button:hover {
+            background-color: #218838;
+        }
+        .special-category:hover {
+            border-left-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header text-center">
+            <h1>ABD Borsası Hisse Takip Uygulaması</h1>
+            <p>30 farklı portföy sayfası ile hisse senetlerinizi organize edin</p>
+        </div>
+
+        <div class="instructions">
+            <h4>Nasıl Kullanılır?</h4>
+            <ul>
+                <li>Aşağıdaki kategorilerden birini seçin</li>
+                <li>Her kategori için farklı hisse kodları kaydedebilirsiniz</li>
+                <li>Hisse kodlarını virgülle ayırarak girin (Örnek: AAPL, MSFT, GOOGL)</li>
+                <li>Kaydet butonuna basarak hisse kodlarınızı saklayın</li>
+                <li>Tekrar aynı kategoriye girdiğinizde kaydettiğiniz hisseler görünecek</li>
+                <li>Son 10 günlük mum grafikleri otomatik olarak oluşturulacak</li>
+            </ul>
+        </div>
+
+        <div class="buttons-container">
+            <div class="text-center mb-4">
+                <h3>Hisse Kategorileri</h3>
+                <p class="text-muted">Her kategori için ayrı hisse grupları kaydedebilirsiniz</p>
+            </div>
+            
+            <!-- Özel kategoriler (1-16) -->
+            <div class="page-button-container special-category" onclick="goToPage(1)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">1</button>
+                    <div class="button-info">
+                        <div class="button-title">Kısa Düzlem</div>
+                        <div class="button-description">Kısa vadeli düzeltme beklenen hisse senetleri</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(2)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">2</button>
+                    <div class="button-info">
+                        <div class="button-title">Yeni Halka Açılan</div>
+                        <div class="button-description">Son dönemde halka açılan yeni şirketler</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(3)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">3</button>
+                    <div class="button-info">
+                        <div class="button-title">Yeni Ters Bölünme</div>
+                        <div class="button-description">Ters hisse bölünmesi yapan şirketler</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(4)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">4</button>
+                    <div class="button-info">
+                        <div class="button-title">Petrol</div>
+                        <div class="button-description">Petrol ve enerji sektörü hisse senetleri</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(5)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">5</button>
+                    <div class="button-info">
+                        <div class="button-title">Bitcoin</div>
+                        <div class="button-description">Kripto para ve blockchain teknolojisi şirketleri</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(6)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">6</button>
+                    <div class="button-info">
+                        <div class="button-title">Altın</div>
+                        <div class="button-description">Altın madenciliği ve değerli metal şirketleri</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(7)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">7</button>
+                    <div class="button-info">
+                        <div class="button-title">Gümüş</div>
+                        <div class="button-description">Gümüş madenciliği ve değerli metal şirketleri</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(8)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">8</button>
+                    <div class="button-info">
+                        <div class="button-title">Açığa Satış %20 Üstü</div>
+                        <div class="button-description">Açığa satış oranı %20'nin üzerinde olan hisseler</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(9)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">9</button>
+                    <div class="button-info">
+                        <div class="button-title">İyi Bilanço Beklenen</div>
+                        <div class="button-description">Pozitif bilanço sonuçları beklenen şirketler</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(10)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">10</button>
+                    <div class="button-info">
+                        <div class="button-title">Kötü Bilanço Beklenen</div>
+                        <div class="button-description">Negatif bilanço sonuçları beklenen şirketler</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(11)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">11</button>
+                    <div class="button-info">
+                        <div class="button-title">Serbest Düşüş</div>
+                        <div class="button-description">Hızlı değer kaybeden hisse senetleri</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(12)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">12</button>
+                    <div class="button-info">
+                        <div class="button-title">İçerde Alanlar</div>
+                        <div class="button-description">Şirket içinden alım yapılan hisse senetleri</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(13)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">13</button>
+                    <div class="button-info">
+                        <div class="button-title">1$ Uyarısı Alanlar</div>
+                        <div class="button-description">1$ altına düşme uyarısı alan hisse senetleri</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(14)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">14</button>
+                    <div class="button-info">
+                        <div class="button-title">Faz Haberi Beklenen</div>
+                        <div class="button-description">Klinik faz sonuçları beklenen ilaç şirketleri</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(15)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">15</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 15</div>
+                        <div class="button-description">Özel kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(16)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">16</button>
+                    <div class="button-info">
+                        <div class="button-title">Yüksek Sahiplik Oranı Olanlar</div>
+                        <div class="button-description">Kurumsal sahiplik oranı yüksek olan hisseler</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Genel kategoriler (17-30) -->
+            <div class="page-button-container special-category" onclick="goToPage(17)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">17</button>
+                    <div class="button-info">
+                        <div class="button-title">Son Günlerde Yükselen</div>
+                        <div class="button-description">Son günlerde güçlü yükseliş gösteren hisse senetleri</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(18)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">18</button>
+                    <div class="button-info">
+                        <div class="button-title">Uzun Zamandır Yatay</div>
+                        <div class="button-description">Uzun süredir yatay seyreden, konsolide olan hisseler</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(19)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">19</button>
+                    <div class="button-info">
+                        <div class="button-title">Son 1 Yıllık Yükseğine Yakın</div>
+                        <div class="button-description">52 haftalık en yüksek seviyesine yakın olan hisseler</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container special-category" onclick="goToPage(20)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">20</button>
+                    <div class="button-info">
+                        <div class="button-title">Son 2 Yıllık Yükseğine Yakın</div>
+                        <div class="button-description">2 yıllık en yüksek seviyesine yakın olan hisseler</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container" onclick="goToPage(21)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">21</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 21</div>
+                        <div class="button-description">Genel amaçlı kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container" onclick="goToPage(22)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">22</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 22</div>
+                        <div class="button-description">Genel amaçlı kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container" onclick="goToPage(23)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">23</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 23</div>
+                        <div class="button-description">Genel amaçlı kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container" onclick="goToPage(24)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">24</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 24</div>
+                        <div class="button-description">Genel amaçlı kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container" onclick="goToPage(25)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">25</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 25</div>
+                        <div class="button-description">Genel amaçlı kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container" onclick="goToPage(26)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">26</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 26</div>
+                        <div class="button-description">Genel amaçlı kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container" onclick="goToPage(27)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">27</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 27</div>
+                        <div class="button-description">Genel amaçlı kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container" onclick="goToPage(28)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">28</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 28</div>
+                        <div class="button-description">Genel amaçlı kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container" onclick="goToPage(29)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">29</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 29</div>
+                        <div class="button-description">Genel amaçlı kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-button-container" onclick="goToPage(30)">
+                <div class="d-flex align-items-center">
+                    <button class="btn page-button">30</button>
+                    <div class="button-info">
+                        <div class="button-title">Kategori 30</div>
+                        <div class="button-description">Genel amaçlı kategori - İleriye dönük kullanım için</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer text-center">
+            <p>© 2025 ABD Borsası Hisse Takip Uygulaması | Veriler Yahoo Finance API üzerinden alınmaktadır.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function goToPage(pageNumber) {
+            window.location.href = '/page/' + pageNumber;
+        }
+    </script>
+</body>
+</html>
+
